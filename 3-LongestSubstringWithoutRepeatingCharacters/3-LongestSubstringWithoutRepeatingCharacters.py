@@ -1,24 +1,23 @@
-# Last updated: 7/23/2025, 7:03:13 PM
+# Last updated: 10/7/2025, 11:36:43 PM
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        # use a set and two index keys
-        # reset the set and move the left index key to the spot of
-        # the right key when a duplicate char is found
+        # dict of already-used letters and their indices
+        letters = {}
 
         left = 0
         right = 0
-        max_str = 0
-        char_dict = {}
-        while right < len(s):
-            if s[right] in char_dict.keys():
-                if left < char_dict[s[right]] + 1:
-                    left = char_dict[s[right]] + 1 # move up left ptr to idx after last repeat letter occurence
-                char_dict[s[right]] = right #update to current idx
-            else:
-                char_dict[s[right]] = right
-            # always make right index go up
-            str_len = right - left + 1
-            max_str = max(max_str, str_len)
+        res = 0
+        n = len(s)
+
+        # go through len of string with the "right" pointer as the limiter
+        while right < n:
+            #check if new element is in set, else add 1 to the substring length
+            if s[right] in letters.keys():
+                left = max(left, letters[s[right]] + 1)
+            # check if youre at a new largest size
+            res = max(res, right-left + 1)
+            # mark down letter just seen
+            letters[s[right]] = right
             right += 1
-        
-        return max_str
+
+        return res
